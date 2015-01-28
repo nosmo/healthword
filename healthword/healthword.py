@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import traceback
+import sys
+
 import requests
 import yaml
-import sys
 
 __author__="nosmo@nosmo.me"
 
@@ -19,7 +21,14 @@ class SiteScanner(object):
         session = self.site_sessions[url]["session"]
         term = self.site_sessions[url]["term"]
 
-        req = session.get(url, verify=False)
+        try:
+            req = session.get(url, verify=False)
+        except requests.exceptions.ConnectionError as e:
+            sys.stderr.write("%s: Couldn't connect to check site: %s" % str(e))
+        except Exception as e:
+            sys.stderr.write("%s: Got exception when connecting: %s" % (url, str(e)))
+            sys.stderr.write(traceback.format_exc())
+
         if req.status_code != 200:
             sys.stderr.write("%s: Got a response code of %d!\n" % (url, req.status_code))
             return False
