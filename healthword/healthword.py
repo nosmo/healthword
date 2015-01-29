@@ -24,9 +24,9 @@ class SiteScanner(object):
         try:
             req = session.get(url, verify=False)
         except requests.exceptions.ConnectionError as e:
-            sys.stderr.write("%s: Couldn't connect to check site: %s" % str(e))
+            sys.stderr.write("%s: Couldn't connect to check site: %s\n" % (url, str(e)))
         except Exception as e:
-            sys.stderr.write("%s: Got exception when connecting: %s" % (url, str(e)))
+            sys.stderr.write("%s: Got exception when connecting: %s\n" % (url, str(e)))
             sys.stderr.write(traceback.format_exc())
 
         if req.status_code != 200:
